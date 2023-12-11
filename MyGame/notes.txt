@@ -1,0 +1,1 @@
+cuando colisione con la cabeza, aplicar gravedad
