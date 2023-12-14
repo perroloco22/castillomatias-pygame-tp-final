@@ -49,7 +49,7 @@ class Enemy(pg.sprite.Sprite):
             self.__is_looking_right = False
         elif self.__rect.left < 2:
             self.__is_looking_right = True
-        return current_direction == self.__is_looking_right
+        # return current_direction == self.__is_looking_right
 
 
     def set_speed_and_animation(self,speed_move:int, animations: list[pg.surface.Surface]):        

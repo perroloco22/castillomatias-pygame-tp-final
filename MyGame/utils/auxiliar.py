@@ -1,4 +1,5 @@
 import pygame as pg
+from constants import *
 import json
 
 class Auxiliar:
@@ -22,7 +23,7 @@ class Auxiliar:
         return lista
 
     @staticmethod
-    def readJson(path):
-        with open(path, 'r') as archivo:
+    def readJson():
+        with open(JSON_PATH, 'r') as archivo:
             contenido = json.load(archivo)
         return contenido

@@ -1,1 +1,20 @@
 cuando colisione con la cabeza, aplicar gravedad
+
+colisiones
+que dispare y que muera y le enemigo desaparezca
+que el enemigo toque al personaje y descuente vida y morirse personaje
+exista piso
+pj debe tener vida, energia, potencia
+fruta, energia full
+trampa, quita vida
+
+pantalla
+lvl 1 donde este el pj para aparezca al menos 1 enemigo
+
+cosas que estan demas
+sonidos
+settings
+pausa
+principal
+ranking(json or db)
+
