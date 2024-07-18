@@ -11,6 +11,7 @@ class Bullet(pg.sprite.Sprite):
         self.__direction = direction
         self.__move_time = 0
         self.__frame_rate = 50
+        self.__is_out = False
 
     def get_image(self,direction:bool) -> pg.surface.Surface:
         image = pg.image.load('assets/bullet/bullet.png')
@@ -29,12 +30,15 @@ class Bullet(pg.sprite.Sprite):
                 self.__rect.x -= self.__speed                
             if self.__rect.x < 0 or self.__rect.x > ANCHO_VENTANA:
                 self.kill()
+                self.__is_out = True
+
+    def is_out(self) -> bool:
+        return self.__is_out
 
     def update(self,delta_ms):
         self.do_movement(delta_ms)
-        
 
-    def draw(self,screen):
+    def draw(self,screen: pg.surface.Surface):
         if(DEBUG):
             pg.draw.rect(screen,BLUE,self.__rect)
         screen.blit(self.__image,self.__rect)

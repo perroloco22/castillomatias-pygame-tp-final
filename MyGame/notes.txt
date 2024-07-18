@@ -18,3 +18,9 @@ pausa
 principal
 ranking(json or db)
 
+
+que spawnee un enemigo
+moneditas 
+trampas
+
+octavio villegas

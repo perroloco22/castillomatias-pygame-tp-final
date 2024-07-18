@@ -5,7 +5,7 @@ from utils.auxiliar import Auxiliar
 from constants import *
 
 class Player(pg.sprite.Sprite):
-    def __init__(self, coord_x: int, coord_y: int, speed_walk:int, speed_run: int, frame_rate: int, jump: int, gravity: int):
+    def __init__(self, coord_x: int, coord_y: int, speed_walk:int, speed_run: int, frame_rate: int, jump: int, gravity: int, list_of_plataforms: list[Plataform]):
         super().__init__()
           
 
@@ -21,6 +21,7 @@ class Player(pg.sprite.Sprite):
         self.__shoot_l = Auxiliar.getSurfaceFromSpriteSheet(f'{IMAGES_PATH}player/shoot/shoot.png', 11, 1, flip=True,aumentar=1.1)
         self.__defense_r = Auxiliar.getSurfaceFromSpriteSheet(f'{IMAGES_PATH}player/defense/defense.png', 3, 1,aumentar=1.1)
         self.__defense_l = Auxiliar.getSurfaceFromSpriteSheet(f'{IMAGES_PATH}player/defense/defense.png', 3, 1, flip=True,aumentar=1.1)
+
         self.__move_x = 0
         self.__move_y = 0
         self.__amount_lives = 3
@@ -45,15 +46,18 @@ class Player(pg.sprite.Sprite):
         self.__is_jumping = False
         self.__speed_jump = jump
         self.__gravity = gravity
+        self.__list_of_plataforms = list_of_plataforms
 
         self.__is_looking_right = True
         self.__rect_collition = pg.Rect(self.__rect.x + self.__rect.w/10 ,self.__rect.y + self.__rect.h - 10,self.__rect.w/1.18, 10)
 
-        self.ready = True
-        self.shoot_time = 0
-        self.shoot_cooldown = 600
+        self.__ready = True
+        self.__shoot_time = 0
+        self.__shoot_cooldown = 600
+        self.__bullet_list : list[Bullet] = [];
 
-        
+        self.__is_collition_plataform = True 
+
     def get_lives(self):
         return self.__amount_lives
                 
@@ -62,6 +66,14 @@ class Player(pg.sprite.Sprite):
 
     def set_speed_y(self,speed_move):     
         self.__move_y = speed_move
+
+    def add_x(self,delta_x):
+        self.__rect.x += delta_x
+        self.__rect_collition.x += delta_x
+    
+    def add_y(self,delta_y):
+        self.__rect.y += delta_y
+        self.__rect_collition.y += delta_y
 
     def set_animation(self,animations: list[pg.surface.Surface]):        
         if self.__actual_animation != animations:
@@ -86,7 +98,7 @@ class Player(pg.sprite.Sprite):
         if self.__move_y < 0 and self.__rect.top  >= 0 - self.__move_y:
             validate = True
         return validate
-    
+
     def defense(self):
         if self.__is_looking_right:
             self.set_animation(self.__defense_r)
@@ -94,15 +106,12 @@ class Player(pg.sprite.Sprite):
             self.set_animation(self.__defense_l)
         self.set_speed_x(0)
 
-
-
     def stay(self):        
         if self.__is_looking_right:
             self.set_animation(self.__stay_r)
         else:
             self.set_animation(self.__stay_l)
         self.set_speed_x(0)
-        
     
     def walk(self, direction: str):
         if direction == 'r':
@@ -114,7 +123,6 @@ class Player(pg.sprite.Sprite):
             self.set_animation(self.__walk_l)
             self.set_speed_x(-self.__speed_walk)
 
-
     def run(self, direction: str):
         if direction == 'r':
             self.__is_looking_right = True
@@ -125,8 +133,8 @@ class Player(pg.sprite.Sprite):
             self.set_animation(self.__run_l)
             self.set_speed_x(-self.__speed_run)      
 
-    def jump(self):        
-        if not self.__is_jumping:
+    def jump(self):
+        if not self.__is_jumping and self.is_on_plataform():
             if(self.__actual_animation != self.__jump_up_l and self.__actual_animation != self.__jump_up_r):
                 self.__is_jumping = True
                 self.set_speed_y(-self.__speed_jump)
@@ -144,12 +152,44 @@ class Player(pg.sprite.Sprite):
             self.set_animation(self.__shoot_l)
         self.set_speed_x(0)
 
-        
+        if self.finished_shoot():
+            bullet_coord_y = self.__rect.centery + 3
+            bullet_coord_x = self.__rect.right + 8 if self.__is_looking_right else self.__rect.left - 8
+            self.__bullet_list.append(Bullet(bullet_coord_x,bullet_coord_y,self.__is_looking_right))
+
     def recharge(self):
-        if not self.ready:
+        if not self.__ready:
             curent_time = pg.time.get_ticks()
-            if curent_time - self.shoot_time >= self.shoot_cooldown:
-                self.ready = True
+            if curent_time - self.__shoot_time >= self.__shoot_cooldown:
+                self.__ready = True
+
+    def is_shooting(self) -> bool:
+        return self.__actual_animation == self.__shoot_l or self.__actual_animation == self.__shoot_r
+
+    def finished_shoot(self) -> bool:
+        return self.is_shooting() and self.__initial_frame == len(self.__shoot_l) - 3
+
+    def update_position_bullets(self,delta_ms):
+        for bullet in self.__bullet_list:
+            bullet: Bullet
+            bullet.update(delta_ms)
+
+    def draw_positions_bullets(self, screen: pg.surface.Surface):
+        for bullet in self.__bullet_list:
+            bullet: Bullet
+            bullet.draw(screen)
+    
+    def update_amount_bullets(self):
+        self.__bullet_list = [elemento for elemento in self.__bullet_list if not elemento.is_out()]
+    
+    def get_bullets(self) -> list[Bullet]:
+        return self.__bullet_list
+
+    def get_position(self):
+        return self.__rect
+    
+    def is_looking_right(self):
+        return self.__is_looking_right
 
     def get_movements(self):
         keys_pressed = pg.key.get_pressed()
@@ -169,11 +209,19 @@ class Player(pg.sprite.Sprite):
             self.run('l')
         if keys_pressed[pg.K_SPACE]:
             self.jump()
-        if keys_pressed[pg.K_RCTRL] and self.ready:
+        if keys_pressed[pg.K_RCTRL] and self.__ready:
             self.shoot()
-            self.ready = False
-            self.shoot_time = pg.time.get_ticks()
-         
+            self.__ready = False
+            self.__shoot_time = pg.time.get_ticks()
+    
+    def is_on_plataform(self):
+        result = False
+        for plataform in self.__list_of_plataforms:
+            if(self.__rect_collition.colliderect(plataform.get_rect_collition())):
+                result = True
+                break
+        self.__is_collition_plataform = result
+        return result
     
     def do_animation(self, delta_ms):
         self.__player_animation_time += delta_ms
@@ -184,19 +232,20 @@ class Player(pg.sprite.Sprite):
                 print(self.__initial_frame)
             else:
                 self.__initial_frame = 0
-
     
-    def do_movement(self, delta_ms,list_of_plataforms: list[Plataform]):
+    def do_movement(self, delta_ms):
         self.__player_move_time += delta_ms
         if self.__player_move_time >= self.__frame_rate:
             self.__player_move_time = 0
-            if not self.is_on_plataform(list_of_plataforms) and not self.__is_jumping:
+            
+            if not self.is_on_plataform() and not self.__is_jumping:
+                # self.__move_y += self.__gravity
                 self.add_y(self.__gravity)
 
             if self.__is_jumping:
                 self.add_y(self.__move_y)
                 self.__move_y += self.__gravity
-                if self.is_on_plataform(list_of_plataforms) or self.__move_y == self.__speed_jump + self.__gravity :
+                if self.is_on_plataform() or self.__move_y == self.__speed_jump + self.__gravity :
                     self.__is_jumping = False
                     self.__move_y = 0
                     self.__move_x = 0   
@@ -207,36 +256,21 @@ class Player(pg.sprite.Sprite):
             else:
                 self.add_x(0)
 
-
-    def is_on_plataform(self,list_of_plataforms: list[Plataform]):
-        result = False
-        for plataform in list_of_plataforms:
-            if(self.__rect_collition.colliderect(plataform.get_rect_collition())):
-                result = True
-                break
-
-        return result
-
-    def add_x(self,delta_x):
-        self.__rect.x += delta_x
-        self.__rect_collition.x += delta_x
-    
-    def add_y(self,delta_y):
-        self.__rect.y += delta_y
-        self.__rect_collition.y += delta_y
-
-
-    def update(self,delta_ms,list_of_plataforms: list[Plataform]):
+    def update(self,delta_ms):
         self.get_movements()
         self.recharge()
         self.do_animation(delta_ms)
-        self.do_movement(delta_ms,list_of_plataforms)
-        
+        self.do_movement(delta_ms)
+        self.update_amount_bullets()
+        self.update_position_bullets(delta_ms)
         
     def draw(self,screen: pg.surface.Surface):
         if(DEBUG):
             pg.draw.rect(screen,BLUE,self.__rect)
             pg.draw.rect(screen,GREEN,self.__rect_collition)
         self.__actual_img_animation = self.__actual_animation[self.__initial_frame]
+        self.draw_positions_bullets(screen)
         screen.blit(self.__actual_img_animation,self.__rect)
+
+
 

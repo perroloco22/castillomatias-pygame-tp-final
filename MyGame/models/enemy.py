@@ -4,7 +4,7 @@ from constants import *
 
 class Enemy(pg.sprite.Sprite):
     def __init__(self, coord_x: int, coord_y: int, speed_walk:int, speed_run: int, frame_rate: int):
-        super().__init__()
+        
           
 
         self.__stay_r = Auxiliar.getSurfaceFromSpriteSheet(f'{IMAGES_PATH}enemy/stay/stay.png',6,1)
