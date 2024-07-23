@@ -5,10 +5,10 @@ from constants import *
 class Life(pg.sprite.Sprite):
     def __init__(self,pos_x,pos_y):
         super().__init__()
-        self.__img = self.get_image()
-        self.__rect = self.__img.get_rect()
-        self.__rect.x = pos_x
-        self.__rect.y = pos_y
+        self.image = self.get_image()
+        self.rect = self.image.get_rect()
+        self.rect.x = pos_x
+        self.rect.y = pos_y
 
     def get_image(self) -> pg.surface.Surface:
         image = pg.image.load('assets/life/life.png')
@@ -17,7 +17,8 @@ class Life(pg.sprite.Sprite):
 
     def draw(self,screen: pg.surface.Surface):
         if DEBUG:
-            pg.draw.rect(screen, RED, self.__rect)
-        screen.blit(self.__img,self.__rect)
+            pg.draw.rect(screen, RED, self.rect)
+        screen.blit(self.image,self.rect)
     
-    
+    def do_kill(self):
+        self.kill()

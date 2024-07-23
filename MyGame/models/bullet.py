@@ -5,13 +5,13 @@ from constants import *
 class Bullet(pg.sprite.Sprite):
     def __init__(self, pos_x, pos_y, direction: bool):
         super().__init__()        
-        self.__image = self.get_image(direction)
-        self.__rect = self.__image.get_rect(center=(pos_x, pos_y))
-        self.__speed = 20
-        self.__direction = direction
-        self.__move_time = 0
-        self.__frame_rate = 50
-        self.__is_out = False
+        self.image = self.get_image(direction)
+        self.rect = self.image.get_rect(center=(pos_x, pos_y))
+        self.speed = 20
+        self.direction = direction
+        self.move_time = 0
+        self.frame_rate = 50
+        self.out = False
 
     def get_image(self,direction:bool) -> pg.surface.Surface:
         image = pg.image.load('assets/bullet/bullet.png')
@@ -21,24 +21,24 @@ class Bullet(pg.sprite.Sprite):
         return image
 
     def do_movement(self,delta_ms):
-        self.__move_time += delta_ms
-        if self.__move_time >= self.__frame_rate:
-            self.__move_time = 0
-            if self.__direction:
-                self.__rect.x += self.__speed                
+        self.move_time += delta_ms
+        if self.move_time >= self.frame_rate:
+            self.move_time = 0
+            if self.direction:
+                self.rect.x += self.speed                
             else:
-                self.__rect.x -= self.__speed                
-            if self.__rect.x < 0 or self.__rect.x > ANCHO_VENTANA:
+                self.rect.x -= self.speed                
+            if self.rect.x < 0 or self.rect.x > ANCHO_VENTANA:
                 self.kill()
-                self.__is_out = True
+                self.out = True
 
     def is_out(self) -> bool:
-        return self.__is_out
+        return self.out
 
     def update(self,delta_ms):
         self.do_movement(delta_ms)
 
     def draw(self,screen: pg.surface.Surface):
         if(DEBUG):
-            pg.draw.rect(screen,BLUE,self.__rect)
-        screen.blit(self.__image,self.__rect)
+            pg.draw.rect(screen,BLUE,self.rect)
+        screen.blit(self.image,self.rect)

@@ -4,134 +4,131 @@ from constants import *
 
 class Enemy(pg.sprite.Sprite):
     def __init__(self, coord_x: int, coord_y: int, speed_walk:int, speed_run: int, frame_rate: int):
-        
-          
+        super().__init__()
 
-        self.__stay_r = Auxiliar.getSurfaceFromSpriteSheet(f'{IMAGES_PATH}enemy/stay/stay.png',6,1)
-        self.__stay_l = Auxiliar.getSurfaceFromSpriteSheet(f'{IMAGES_PATH}enemy/stay/stay.png',6,1,flip=True)
-        self.__birth_r = Auxiliar.getSurfaceFromSpriteSheet(f'{IMAGES_PATH}enemy/birth/birth.png',8,1)
-        self.__birth_l = Auxiliar.getSurfaceFromSpriteSheet(f'{IMAGES_PATH}enemy/birth/birth.png',8,1, flip=True)
-        self.__walk_r = Auxiliar.getSurfaceFromSpriteSheet(f'{IMAGES_PATH}enemy/walk/walk.png',3,1)
-        self.__walk_l = Auxiliar.getSurfaceFromSpriteSheet(f'{IMAGES_PATH}enemy/walk/walk.png',3,1,flip=True)
-        self.__run_r = Auxiliar.getSurfaceFromSpriteSheet(f'{IMAGES_PATH}enemy/run/run.png', 4, 1)
-        self.__run_l = Auxiliar.getSurfaceFromSpriteSheet(f'{IMAGES_PATH}enemy/run/run.png', 4, 1, flip=True)
-        
-        self.__move_x = 0
+        self.stay_r = Auxiliar.getSurfaceFromSpriteSheet(f'{IMAGES_PATH}enemy/stay/stay.png',6,1)
+        self.stay_l = Auxiliar.getSurfaceFromSpriteSheet(f'{IMAGES_PATH}enemy/stay/stay.png',6,1,flip=True)
+        self.birth_r = Auxiliar.getSurfaceFromSpriteSheet(f'{IMAGES_PATH}enemy/birth/birth.png',8,1)
+        self.birth_l = Auxiliar.getSurfaceFromSpriteSheet(f'{IMAGES_PATH}enemy/birth/birth.png',8,1, flip=True)
+        self.walk_r = Auxiliar.getSurfaceFromSpriteSheet(f'{IMAGES_PATH}enemy/walk/walk.png',3,1)
+        self.walk_l = Auxiliar.getSurfaceFromSpriteSheet(f'{IMAGES_PATH}enemy/walk/walk.png',3,1,flip=True)
+        self.run_r = Auxiliar.getSurfaceFromSpriteSheet(f'{IMAGES_PATH}enemy/run/run.png', 4, 1)
+        self.run_l = Auxiliar.getSurfaceFromSpriteSheet(f'{IMAGES_PATH}enemy/run/run.png', 4, 1, flip=True)
+        self.pos_initial_x = coord_x
+        self.pos_initial_y = coord_y
 
-        self.__count=0
-        self.__limit_run = 20
-        self.__limit_walk = 100
+        self.move_x = 0
 
+        self.count=0
+        self.limit_run = 20
+        self.limit_walk = 100
 
-        self.__is_birth = True
-        self.__is_walking = False
-        self.__is_run = False
+        self.is_birth = True
+        self.is_walking = False
+        self.is_run = False
 
-        self.__speed_walk = speed_walk
-        self.__speed_run = speed_run
-        self.__frame_rate = frame_rate
-        self.__player_move_time = 0
-        self.__player_animation_time = 0
+        self.speed_walk = speed_walk
+        self.speed_run = speed_run
+        self.frame_rate = frame_rate
+        self.player_move_time = 0
+        self.player_animation_time = 0
 
+        self.is_looking_right = True
 
-        self.__is_looking_right = True
+        self.initial_frame = 0
+        self.actual_animation = self.birth_r
+        self.image = self.actual_animation[self.initial_frame]
+        self.rect = self.image.get_rect()
+        self.rect.x= coord_x
+        self.rect.y= coord_y
 
-        self.__initial_frame = 0
-        self.__actual_animation = self.__birth_r
-        self.__actual_img_animation = self.__actual_animation[self.__initial_frame]
-        self.__rect = self.__actual_img_animation.get_rect()
-        self.__rect.x= coord_x
-        self.__rect.y= coord_y
+    def reboot_position(self):
+        self.rect.x = self.pos_initial_x
+        self.rect.y = self.pos_initial_y
+        self.is_birth = True
 
     def borders_limit(self):
-        current_direction = self.__is_looking_right        
-        if self.__rect.right > ANCHO_VENTANA - 2:
-            self.__is_looking_right = False
-        elif self.__rect.left < 2:
-            self.__is_looking_right = True
-        # return current_direction == self.__is_looking_right
-
+        if self.rect.right > ANCHO_VENTANA - 2:
+            self.is_looking_right = False
+        elif self.rect.left < 2:
+            self.is_looking_right = True
 
     def set_speed_and_animation(self,speed_move:int, animations: list[pg.surface.Surface]):        
-        if self.__actual_animation != animations:
-            self.__initial_frame = 0
-            self.__actual_animation = animations
-        self.__move_x = speed_move 
+        if self.actual_animation != animations:
+            self.initial_frame = 0
+            self.actual_animation = animations
+        self.move_x = speed_move 
 
     def birth(self):
-        if self.__initial_frame == len(self.__birth_l) - 1:
-            self.__is_birth = False
-            self.__is_walking = True
+        if self.initial_frame == len(self.birth_l) - 1:
+            self.is_birth = False
+            self.is_walking = True
 
-        if self.__is_looking_right:
-            self.set_speed_and_animation(0,self.__birth_r)
+        if self.is_looking_right:
+            self.set_speed_and_animation(0,self.birth_r)
         else:
-            self.set_speed_and_animation(0,self.__birth_l)
+            self.set_speed_and_animation(0,self.birth_l)
 
     def stay(self):        
-        if self.__is_looking_right:
-            self.set_speed_and_animation(0,self.__stay_r)
+        if self.is_looking_right:
+            self.set_speed_and_animation(0,self.stay_r)
         else:
-            self.set_speed_and_animation(0,self.__stay_l)
+            self.set_speed_and_animation(0,self.stay_l)
 
     def walk(self):
-        if self.__is_looking_right:
-            self.set_speed_and_animation(self.__speed_walk,self.__walk_r)
+        if self.is_looking_right:
+            self.set_speed_and_animation(self.speed_walk,self.walk_r)
         else:
-            self.set_speed_and_animation(-self.__speed_walk,self.__walk_l)
-        self.__count += 1
-        if self.__count == self.__limit_walk:
-            self.__is_run = True
-            self.__is_walking = False
-            self.__count = 0
-
+            self.set_speed_and_animation(-self.speed_walk,self.walk_l)
+        self.count += 1
+        if self.count == self.limit_walk:
+            self.is_run = True
+            self.is_walking = False
+            self.count = 0
     
     def run(self):
-        if self.__is_looking_right:
-            self.set_speed_and_animation(self.__speed_run,self.__run_r)
+        if self.is_looking_right:
+            self.set_speed_and_animation(self.speed_run,self.run_r)
         else:
-            self.set_speed_and_animation(-self.__speed_run,self.__run_l)
-        self.__count += 1
-        if self.__count == self.__limit_run:
-            self.__is_run = False
-            self.__is_walking = True
-            self.__count = 0
+            self.set_speed_and_animation(-self.speed_run,self.run_l)
+        self.count += 1
+        if self.count == self.limit_run:
+            self.is_run = False
+            self.is_walking = True
+            self.count = 0
             
     def get_movements(self):
-        if self.__is_birth:
+        if self.is_birth:
             self.birth()
         else:
             self.borders_limit()
-            if self.__is_walking:            
+            if self.is_walking:            
                 self.walk()
-            elif self.__is_run:
+            elif self.is_run:
                 self.run()
 
-
     def do_animation(self, delta_ms):
-        self.__player_animation_time += delta_ms
-        if self.__player_animation_time >= self.__frame_rate:
-            self.__player_animation_time = 0
-            if self.__initial_frame < len(self.__actual_animation) - 1:
-                self.__initial_frame += 1
+        self.player_animation_time += delta_ms
+        if self.player_animation_time >= self.frame_rate:
+            self.player_animation_time = 0
+            if self.initial_frame < len(self.actual_animation) - 1:
+                self.initial_frame += 1
             else:
-                self.__initial_frame = 0
-
+                self.initial_frame = 0
     
     def do_movement(self, delta_ms):
-        self.__player_move_time += delta_ms
-        if self.__player_move_time >= self.__frame_rate:
-            self.__player_move_time = 0
-            self.__rect.x += self.__move_x
+        self.player_move_time += delta_ms
+        if self.player_move_time >= self.frame_rate:
+            self.player_move_time = 0
+            self.rect.x += self.move_x
  
     def update(self,delta_ms):
         self.get_movements()
         self.do_animation(delta_ms)
         self.do_movement(delta_ms)
         
-        
     def draw(self,screen: pg.surface.Surface):
         if DEBUG:
-            pg.draw.rect(screen, RED, self.__rect)
-        self.__actual_img_animation = self.__actual_animation[self.__initial_frame]
-        screen.blit(self.__actual_img_animation,self.__rect)
+            pg.draw.rect(screen, RED, self.rect)
+        self.image = self.actual_animation[self.initial_frame]
+        screen.blit(self.image,self.rect)
