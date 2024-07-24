@@ -132,3 +132,5 @@ class Enemy(pg.sprite.Sprite):
             pg.draw.rect(screen, RED, self.rect)
         self.image = self.actual_animation[self.initial_frame]
         screen.blit(self.image,self.rect)
+
+        

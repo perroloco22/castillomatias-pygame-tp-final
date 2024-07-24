@@ -91,8 +91,9 @@ class Player(pg.sprite.Sprite):
 
     def remove_life(self):
         if self.lifes_list:
-            life_deleted = self.lifes_list.pop()
+            life_deleted : Life= self.lifes_list.pop()
             self.lifes_group.remove(life_deleted)
+            life_deleted.do_kill()
             self.quit_life()        
 
     def get_lifes(self):
@@ -189,13 +190,9 @@ class Player(pg.sprite.Sprite):
             self.set_speed_x(-self.speed_run)      
 
     def jump(self):
-            self.is_defending = False   
-            
-        # if not self.__is_jumping and self.__is_on_the_floor:
+        self.is_defending = False   
+        if self.on_ground:
             if(self.actual_animation != self.jump_up_l and self.actual_animation != self.jump_up_r):
-                # self.__is_jumping = True
-                # self.__is_on_the_floor = False
-                # self.set_speed_y(-self.__speed_jump)
                 if self.looking_right:
                     self.set_animation(self.jump_up_r)
                 else:
@@ -281,6 +278,9 @@ class Player(pg.sprite.Sprite):
                 self.pos.y = self.rect.y
                 self.direction.y = 0
                 self.on_ground = True
+                break
+            else:
+                self.on_ground = False
     
     def apply_gravity(self):
         self.direction.y += self.gravity
@@ -296,28 +296,6 @@ class Player(pg.sprite.Sprite):
             self.add_x(self.direction.x)
             
     def movement_vertical(self):
-        """
-        self.is_on_plataform()
-        if not self.__plataform_collition:
-            print("ENTRO ACA")
-            self.apply_gravity()
-            self.add_y(self.__move_y)
-            # if self.is_on_plataform() or self.__move_y == self.__speed_jump + self.__gravity:
-            #     print("ENTRO MOVEMENT")
-            #     self.rect.bottom = self.__plataform_collition.rect_collition.top + 1
-            #     self.rect_collition.bottom = self.__plataform_collition.rect_collition.top + 1
-            #     self.__is_jumping = False                
-            #     self.set_speed_y(0)
-            #     self.stay()
-        elif self.__plataform_collition:
-            print("ENTRO MOVEMENT")
-            self.__is_jumping = False
-            self.__is_on_the_floor = True
-            # self.rect.bottom = self.__plataform_collition.rect_collition.top + 1
-            # self.rect_collition.bottom = self.__plataform_collition.rect_collition.top + 1
-            self.set_speed_y(0)
-            # self.stay()
-        """
         if self.check_limit_y():
                 self.add_y(self.direction.y)
         else:

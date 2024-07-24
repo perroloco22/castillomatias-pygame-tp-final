@@ -29,8 +29,7 @@ class Bullet(pg.sprite.Sprite):
             else:
                 self.rect.x -= self.speed                
             if self.rect.x < 0 or self.rect.x > ANCHO_VENTANA:
-                self.kill()
-                self.out = True
+                self.do_kill()
 
     def is_out(self) -> bool:
         return self.out
@@ -42,3 +41,7 @@ class Bullet(pg.sprite.Sprite):
         if(DEBUG):
             pg.draw.rect(screen,BLUE,self.rect)
         screen.blit(self.image,self.rect)
+
+    def do_kill(self):
+        self.out = True
+        self.kill()
