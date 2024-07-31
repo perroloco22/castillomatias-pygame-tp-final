@@ -1,5 +1,3 @@
-cuando colisione con la cabeza, aplicar gravedad
-
 colisiones
 que dispare y que muera y le enemigo desaparezca
 que el enemigo toque al personaje y descuente vida y morirse personaje
@@ -17,8 +15,6 @@ settings
 pausa
 principal
 ranking(json or db)
-
-
 que spawnee un enemigo
 moneditas 
 trampas

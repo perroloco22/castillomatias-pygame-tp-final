@@ -4,12 +4,14 @@ from models.plataform import Plataform
 from utils.auxiliar import Auxiliar
 from models.enemy import Enemy
 from models.fruits import Fruit
+from models.trap import Trap
 
 class BuilderStage():
     def __init__(self, level:str, map: list[list[int]] = None):
         self.json = Auxiliar.readJson()
-        self.map = self.json['stages'][level]['map']
-        self.enemies = self.json['stages'][level]['enemies']
+        self.level = level
+        self.map = self.json['stages'][self.level]['map']
+        self.enemies = self.json['stages'][self.level]['enemies']
         self.coordinates = []
 
     def __Get_coordinates(self) -> list[dict]:
@@ -39,6 +41,19 @@ class BuilderStage():
         for coordenate in coordenates:
             result.append(Enemy(coord_x=coordenate["x"],coord_y=coordenate["y"],speed_walk=speed_walk,speed_run=speed_run,frame_rate=frame_rate))
         return result
+    
+    def build_trap(self) -> pg.sprite.Group:
+        trap_group = pg.sprite.Group()
+        if self.level == "level_3":
+            data_trap =  self.json["stages"][self.level]["trap"]
+            speed = data_trap["speed"] 
+            frame = data_trap["frame"] 
+            move = data_trap["move_time"]
+            coordenates = data_trap["coordenates"]
+            for coordenate in coordenates:
+                trap_group.add(Trap(pos_x=coordenate["x"],pos_y=coordenate["y"],move_time=move,frame_rate=frame,speed=speed))
+        return trap_group
+
 
     def Build_Map(self) -> list[pg.sprite.Group]:
         if not self.coordinates:
@@ -55,18 +70,7 @@ class BuilderStage():
         result["fruits"] = fruits
         return result
 
-    '''
-    def Build_plataform_list(self) -> list[Plataform]:
-        if not self.coordinates:
-            self.__Get_coordinates()        
-        blocks = []
-        
-        for coor in self.coordinates:            
-            block = Plataform(coord_x=coor['x'],coord_y=coor['y'])
-            blocks.append(block)
-        
-        return blocks
-    '''        
+           
         
 
        
