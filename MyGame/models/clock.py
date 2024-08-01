@@ -19,7 +19,7 @@ class Clock:
         if self.lapse_time <= 10:
             self.text_color_current = self.text_color_alert 
         self.number_surface = self.font.render(f"Tiempo: {self.lapse_time}s", True, self.text_color_current)
-        self.position = self.number_surface.get_rect(center = (self.window_width/2,12))
+        self.position = self.number_surface.get_rect(center = (300,12))
 
     def get_surface(self) -> pg.surface.Surface:
         return self.number_surface

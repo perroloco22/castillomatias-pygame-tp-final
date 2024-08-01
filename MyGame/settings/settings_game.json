@@ -9,11 +9,7 @@
             "speed_walk":15,
             "speed_run":25,
             "gravity":1
-        },
-        "clock":
-        {
-            
-        },        
+        },               
         "ancho":800,
         "alto":600,
         "fps":60,
@@ -22,12 +18,19 @@
         "size_block":40,
         "tittle_window":"DBPY",
         "path_background_stage":"assets/background/fondo2.png",
-        "path_background_menu":"assets/background/Kame House Wallpaper - iXpap.jpg",
+        "path_background_menu":"assets/background/fondo_menu.jpg",
+        "path_background_table":"assets/background/tabla_nueva.jpg",
         "limit_time":30000,
         "text_color_normal":[255, 255, 255],
-        "text_color_alert":[255, 255, 255],
+        "text_color_title":[247, 255, 0],
+        "text_color_alert":[255, 0, 0],
         "font_size":25,
-        "font_path":"font/font.ttf"
+        "font_title_size":75,
+        "font_menu_options_size":40,
+        "font_score_size":20,
+        "font_path_time":"font/font.ttf",
+        "font_path_menu":"font/Saiyan-Sans.ttf",
+        "menu_options" : ["1. Jugar", "2. Estadisticas", "3. Salir"]
     },
     "stages":{
         "level_1":
@@ -109,6 +112,19 @@
                 "speed_walk":18,
                 "speed_run":45,
                 "frame_rate":100
+            },
+            "trap":
+            {
+                "coordenates":
+                [                
+                    {
+                        "x":700,
+                        "y":200
+                    }
+                ],
+                "speed":10,
+                "frame":50,
+                "move_time":0
             }
         },
         

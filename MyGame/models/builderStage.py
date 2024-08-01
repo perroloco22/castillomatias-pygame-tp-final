@@ -44,7 +44,7 @@ class BuilderStage():
     
     def build_trap(self) -> pg.sprite.Group:
         trap_group = pg.sprite.Group()
-        if self.level == "level_3":
+        if self.level != "level_1":
             data_trap =  self.json["stages"][self.level]["trap"]
             speed = data_trap["speed"] 
             frame = data_trap["frame"] 
