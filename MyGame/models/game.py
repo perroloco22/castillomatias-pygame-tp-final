@@ -24,14 +24,17 @@ class Game:
         self.window_width = self.config["config"]["ancho"]
         self.window_height = self.config["config"]["alto"]
         self.screen = pg.display.set_mode((self.window_width,self.window_height))
+
         self.background_image_stage = pg.image.load(self.config["config"]["path_background_stage"])
         self.background_image_stage = pg.transform.scale(self.background_image_stage,(self.window_width,self.window_height))
         self.background_image_menu = pg.image.load(self.config["config"]["path_background_menu"])
         self.background_image_menu = pg.transform.scale(self.background_image_menu,(self.window_width,self.window_height))
         self.background_image_table = pg.image.load(self.config["config"]["path_background_table"])
+        
         self.level_1 :str = "level_1"
         self.level_2 :str = "level_2"
         self.level_3 :str = "level_3"
+        
         self.current_level = None
         self.builder : BuilderStage = None
         self.map : list[pg.sprite.Group] = None
@@ -46,14 +49,20 @@ class Game:
         self.explosion_group = pg.sprite.Group()
         self.limit_time :int = self.config["config"]["limit_time"]
         self.fps = self.config["config"]["fps"]
-        self.font_path_menu = self.config["config"]["font_path_menu"]
-        self.font_title = pg.font.Font(self.font_path_menu,self.config["config"]["font_title_size"])
-        self.font_menu_options = pg.font.Font(self.font_path_menu,self.config["config"]["font_menu_options_size"])
-        self.font_score = pg.font.Font(self.font_path_menu,self.config["config"]["font_score_size"])
+        
         self.yellow = (self.config["config"]["text_color_title"][0],self.config["config"]["text_color_title"][1],self.config["config"]["text_color_title"][2])
         self.red = (self.config["config"]["text_color_alert"][0],self.config["config"]["text_color_alert"][1],self.config["config"]["text_color_alert"][2])
+        
+        self.font_path_menu = self.config["config"]["font_path_menu"]
+        self.font_menu_options = pg.font.Font(self.font_path_menu,self.config["config"]["font_menu_options_size"])
+        
+        self.font_path_score = self.config["config"]["font_path_time"]
+        self.font_score = pg.font.Font(self.font_path_score,self.config["config"]["font_score_size"])
+
+        self.font_title = pg.font.Font(self.font_path_menu,self.config["config"]["font_title_size"])
         self.title_surface = self.font_title.render("DRAGON BALL PY",True,(self.yellow))
         self.title_rect = self.title_surface.get_rect(center=(self.window_width//2,self.window_height//4))
+        
         self.text_color = None
         self.clock : Clock = None
         self.delta_ms = None
@@ -161,25 +170,21 @@ class Game:
                     if event.key == pg.K_ESCAPE:
                         return
             
-            # print(self.lista_puntajes[0][0])
-            # date_surface = self.font_score.render(f'{self.lista_puntajes[0][0]}',True,(0,0,0),(120,120,120))
             self.screen.blit(self.background_image_menu, self.background_image_menu.get_rect())
             self.screen.blit(self.background_image_table, self.background_image_table.get_rect(center=(self.window_width//2,300)))
             self.draw_score()
-            # self.screen.blit(date_surface,date_surface.get_rect(center=(500,300)))
             pg.display.update()
 
     def draw_score(self):
         lista_puntajes = self.connection.Get_top_five_scores()
         y = 200
         for registro in lista_puntajes:
-            print(f'{registro[0]}   -   {registro[1]}')
-            date_surface = self.font_menu_options.render(registro[0],True,(0,0,0),(120,120,120))
-            score_surface = self.font_menu_options.render(str(registro[1]),True,(0,0,0),(120,120,120))
-            self.screen.blit(date_surface,date_surface.get_rect(center=(300,y)))
-            self.screen.blit(score_surface,score_surface.get_rect(center=(400,y)))
-            y+=20
-        
+            date_surface = self.font_score.render(registro[0],True,(0,0,0))
+            score_surface = self.font_score.render(str(registro[1]),True,(0,0,0))
+            self.screen.blit(date_surface,date_surface.get_rect(center=(355,y)))
+            self.screen.blit(score_surface,score_surface.get_rect(center=(500,y)))
+            y+=35
+            
     def loading_score(self):
         print("CARGANDO DATOS")
         self.connection.Add_Register(self.score.Datetime,self.score.Score)
@@ -202,6 +207,9 @@ class Game:
                 if event.type == pg.QUIT:
                     pg.quit()
                     sys.exit()
+                elif event.type == pg.KEYDOWN:
+                    if event.key == pg.K_ESCAPE:
+                        return
 
             self.screen.blit(self.background_image_stage,self.background_image_stage.get_rect())
             self.screen.blit(self.clock.get_surface(),self.clock.get_position())
