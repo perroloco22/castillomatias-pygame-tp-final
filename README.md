@@ -28,3 +28,8 @@ Durante la partida podés recuperar vida atrapando las **semillas del ermitaño*
 - ❌ Cerrar ventana / Esc → Salir del juego
 
 ---
+
+## 🎥 Video de Jugabilidad  
+
+[![Ver en YouTube](https://img.youtube.com/vi/ID_DEL_VIDEO/maxresdefault.jpg)](https://youtu.be/tCWZS6Edy8c)
+
