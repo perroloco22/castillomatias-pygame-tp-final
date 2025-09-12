@@ -25,6 +25,6 @@ Durante la partida podés recuperar vida atrapando las **semillas del ermitaño*
 - **Shift (mantener)** → Correr más rápido  
 - **Ctrl Derecho** → Disparar  
 - **Ctrl Izquierdo** → Cubrirse  
-- ❌ Cerrar ventana / Esc → Salir del juego  
+- ❌ Cerrar ventana / Esc → Salir del juego
 
 ---
