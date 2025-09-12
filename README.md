@@ -2,7 +2,7 @@
 
 Juego desarrollado en **Python** con la librería **Pygame**, utilizando **Programación Orientada a Objetos** (clases, métodos y atributos).  
 Incluye manejo de archivos, almacenamiento de puntajes en **SQLite**, y configuración general mediante un archivo `.json`.  
-
+⚡ Este juego fue realizado como Trabajo Práctico Integrador para la materia Programación 1.
 ---
 
 ## 🎮 Descripción del Juego  
