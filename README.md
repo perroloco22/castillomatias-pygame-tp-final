@@ -1,31 +1,37 @@
 # 🐉 Dragon Ball: Goku vs Cell Jrs  
 
-Juego desarrollado en **Python** con la librería **Pygame**, utilizando **Programación Orientada a Objetos** (clases, métodos y atributos).  
-Incluye manejo de archivos, almacenamiento de puntajes en **SQLite**, y configuración general mediante un archivo `.json`.  
-⚡ Este juego fue realizado como Trabajo Práctico Integrador para la materia Programación 1.
+Juego desarrollado en **Python** con la librería **Pygame**, siguiendo el **paradigma orientado a objetos** (clases, métodos y atributos).  
+Incluye:  
+- Manejo de archivos.  
+- Guardado de puntajes en base de datos **SQLite**.  
+- Archivo `.json` para la configuración general del juego.  
+
+> ⚡ Este juego fue realizado como **Trabajo Práctico Integrador** para la materia **Programación 1**.  
+
 ---
 
 ## 🎮 Descripción del Juego  
 
-Encarnás a **Goku** en una batalla contra los **Cell Jrs**. El objetivo es derrotar a todos los enemigos de cada nivel en menos de **30 segundos** para poder avanzar.  
+Encarnás a **Goku** en una batalla contra los **Cell Jrs**.  
+El objetivo es derrotar a todos los enemigos de cada nivel en menos de **30 segundos** para poder avanzar.  
 
-El juego cuenta con **3 niveles** de dificultad creciente:  
-- Mayor cantidad de enemigos.  
-- Enemigos más rápidos y agresivos.  
-- Aparición de obstáculos adicionales como los **Kienzan**, que deberás esquivar.  
+El juego cuenta con **3 niveles** con dificultad creciente:  
+- Más enemigos por enfrentar.  
+- Mayor velocidad y agresividad de los Cell Jrs.  
+- Obstáculos extra como los **Kienzan**, que se mueven por la pantalla.  
 
-Durante la partida podés recuperar vida atrapando las **semillas del ermitaño**.  
+Podés recuperar vida atrapando las **semillas del ermitaño** para tener más chances de sobrevivir.  
 
 ---
 
 ## 🕹️ Controles  
 
-- ⬆️ / ⬇️ / ⬅️ / ➡️ → Movimiento del personaje  
+- ⬆️ / ⬇️ / ⬅️ / ➡️ → Moverse  
 - **Espacio** → Saltar  
 - **Shift (mantener)** → Correr más rápido  
 - **Ctrl Derecho** → Disparar  
 - **Ctrl Izquierdo** → Cubrirse  
-- ❌ Cerrar ventana / Esc → Salir del juego
+- ❌ **Esc / Cerrar ventana** → Salir del juego  
 
 ---
 
