@@ -31,5 +31,6 @@ Durante la partida podés recuperar vida atrapando las **semillas del ermitaño*
 
 ## 🎥 Video de Jugabilidad  
 
-[![Ver en YouTube](https://img.youtube.com/vi/ID_DEL_VIDEO/maxresdefault.jpg)](https://youtu.be/tCWZS6Edy8c)
+[![Ver en YouTube](https://img.youtube.com/vi/tCWZS6Edy8c/maxresdefault.jpg)](https://www.youtube.com/watch?v=tCWZS6Edy8c)
+
 
